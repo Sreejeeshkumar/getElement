@@ -54,17 +54,58 @@ console.log('Submitted Data:');
 }
 function displayUserDetails(userDetails) {
   var userDetailsSection = document.getElementById('userDetailsSection');
-  
-  // Get the name of the last added user (newly submitted user)
-  var lastAddedUserName = Object.keys(userDetails).pop();
 
-  // Generate the string for the last added user details
-  var userDetailsString = 'Name: ' + lastAddedUserName + ', ';
-  userDetailsString += 'Date: ' + userDetails[lastAddedUserName].date + ', ';
-  userDetailsString += 'Email: ' + userDetails[lastAddedUserName].email + ', ';
-  userDetailsString += 'Time: ' + userDetails[lastAddedUserName].time + ', ';
-  userDetailsString += 'Phone: ' + userDetails[lastAddedUserName].phone;
+  // Clear existing content
+  userDetailsSection.innerHTML = '';
 
-  // Update the userDetailsSection with the user details string
-  userDetailsSection.textContent = userDetailsString;
+  for (var userName in userDetails) {
+    var userDetail = userDetails[userName];
+
+    var userDetailsLine = 'Name: ' + userName + ', ';
+    userDetailsLine += 'Date: ' + userDetail.date + ', ';
+    userDetailsLine += 'Email: ' + userDetail.email + ', ';
+    userDetailsLine += 'Time: ' + userDetail.time + ', ';
+    userDetailsLine += 'Phone: ' + userDetail.phone;
+
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', (function (user) {
+      return function () {
+        deleteUser(user);
+      };
+    })(userName));
+
+    userDetailsSection.appendChild(document.createTextNode(userDetailsLine));
+    userDetailsSection.appendChild(deleteButton);
+    userDetailsSection.appendChild(document.createElement('br'));
+  }
 }
+
+function deleteUser(userName) {
+  // Retrieve existing user details from local storage
+  var storedUserDetailsJSON = localStorage.getItem('userDetails');
+  var userDetails = {};
+
+  if (storedUserDetailsJSON) {
+    // Parse the stored user details JSON string back to an object or array
+    userDetails = JSON.parse(storedUserDetailsJSON);
+  }
+
+  // Remove the user from the userDetails object
+  delete userDetails[userName];
+
+  // Convert the updated userDetails object to a JSON string
+  var updatedUserDetailsJSON = JSON.stringify(userDetails);
+
+  // Store the updated userDetails JSON string in local storage
+  localStorage.setItem('userDetails', updatedUserDetailsJSON);
+
+  // Update the UI after removing the user
+  displayUserDetails(userDetails);
+}
+
+
+
+
+
+
