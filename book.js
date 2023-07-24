@@ -74,9 +74,16 @@ function displayUserDetails(userDetails) {
         deleteUser(user);
       };
     })(userName));
-
+    var editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.addEventListener('click', (function (user) {
+      return function () {
+        editUser(user);
+      };
+    })(userName));
     userDetailsSection.appendChild(document.createTextNode(userDetailsLine));
     userDetailsSection.appendChild(deleteButton);
+    userDetailsSection.appendChild(editButton);
     userDetailsSection.appendChild(document.createElement('br'));
   }
 }
@@ -103,7 +110,34 @@ function deleteUser(userName) {
   // Update the UI after removing the user
   displayUserDetails(userDetails);
 }
+function editUser(userName) {
+  // Retrieve existing user details from local storage
+  var storedUserDetailsJSON = localStorage.getItem('userDetails');
+  var userDetails = {};
 
+  if (storedUserDetailsJSON) {
+    // Parse the stored user details JSON string back to an object or array
+    userDetails = JSON.parse(storedUserDetailsJSON);
+  }
+
+  var userDetail = userDetails[userName];
+
+  // Populate the form with the user's existing details
+  document.getElementById('date').value = userDetail.date;
+  document.getElementById('email').value = userDetail.email;
+  document.getElementById('time').value = userDetail.time;
+  document.getElementById('phone').value = userDetail.phone;
+  document.getElementById('name').value = userName;
+
+  // Remove the user from the userDetails object temporarily while editing
+  delete userDetails[userName];
+
+  // Convert the updated userDetails object to a JSON string (without the current user)
+  var updatedUserDetailsJSON = JSON.stringify(userDetails);
+
+  // Store the updated userDetails JSON string in local storage
+  localStorage.setItem('userDetails', updatedUserDetailsJSON);
+}
 
 
 
