@@ -7,12 +7,28 @@ function submitForm(event) {
   var phone = document.getElementById('phone').value;
   var name = document.getElementById('name').value;
 
-  // Store data in local storage individually
-  localStorage.setItem('userDate', date);
-  localStorage.setItem('userEmail', email);
-  localStorage.setItem('userTime', time);
-  localStorage.setItem('userPhone', phone);
-  localStorage.setItem('userName', name);
+  // // Store data in local storage individually
+  // localStorage.setItem('userDate', date);
+  // localStorage.setItem('userEmail', email);
+  // localStorage.setItem('userTime', time);
+  // localStorage.setItem('userPhone', phone);
+  // localStorage.setItem('userName', name);
+ // Create an object to store user details
+ var userDetails = {
+  date: date,
+  email: email,
+  time: time,
+  phone: phone,
+  name: name,
+};
+
+// Convert the userDetails object to a JSON string
+var userDetailsJSON = JSON.stringify(userDetails);
+
+// Store the userDetails JSON string in local storage
+localStorage.setItem('userDetails', userDetailsJSON);
+ 
+
 
   console.log('Submitted Data:');
   console.log('Date:', date);
